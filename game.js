@@ -8,14 +8,14 @@ function showNavBar() {
 const toggleBtn = document.querySelector('.toggle-btn');
 toggleBtn.addEventListener('click', showNavBar);
 
-
+const navBarList = document.querySelectorAll('li');
+navBarList.forEach(e => e.addEventListener('click', toggleModes));
 
 
 
 
 // ETCH A SKETCH CODE
 // GRID DRAWING AND SIZING
-const gridBtn = document.querySelector('#grid-size');
 const gridContainer = document.querySelector('.grid'); // Defining grid container
 
 function removeOldGrid(gridContainer) {
@@ -42,8 +42,7 @@ function gridIterator(gridSize, gridContainer) {
 
 
 drawGridWithColors = function createGrid(gridSize = 16) {
-    const navBarList = document.querySelectorAll('li');
-    navBarList.forEach(e => e.addEventListener('click', toggleModes));
+    
 
     console.log(gridSize);
     removeOldGrid(gridContainer); // removing previous grid container, if such exist
@@ -70,9 +69,11 @@ getSizeAndCreateGrid = function userGridSize() {
     } else if (isNaN(gridSize)) {
         gridSize = 16;
     }
+    // return gridSize;
     drawGridWithColors(gridSize);
 }
 
+const gridBtn = document.querySelector('#grid-size');
 gridBtn.addEventListener('click', getSizeAndCreateGrid);
 
 
@@ -109,7 +110,14 @@ function toggleModes(gridContainer) {
     const body = document.querySelector('body');
     const navbar = document.querySelector('.navbar');
     const noir = document.querySelector('#noir');
+    const multi = document.querySelector('#multi');
+    const psycho = document.querySelector('#psycho');
+
+
+    
     noir.addEventListener('click', changeToNoir);
+    multi.addEventListener('click', changeToMulti);
+    psycho.addEventListener('click', changeToPsycho);
 
     // changeToNoir(body, navbar, gridContainer);
     console.log(body);
@@ -132,11 +140,20 @@ function toggleModes(gridContainer) {
 }
 
 function changeToNoir(body, navbar, gridContainer) {
+    console.log('Noir');
     body.classList.add('noir-style');
     navbar.classList.add('noir-style');
     gridContainer.classList.add('noir-style');
     return body, navbar, gridContainer;
 
+}
+
+function changeToMulti() {
+    console.log('Multi');
+}
+
+function changeToPsycho() {
+    console.log('Multi');
 }
 
 
