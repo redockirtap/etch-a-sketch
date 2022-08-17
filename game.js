@@ -3,7 +3,7 @@
 function showNavBar() {
     const navbar = document.querySelector('.navbar');
     navbar.classList.toggle('active');
-}
+};
 
 const toggleBtn = document.querySelector('.toggle-btn');
 toggleBtn.addEventListener('click', showNavBar);
@@ -12,20 +12,23 @@ toggleBtn.addEventListener('click', showNavBar);
 
 
 
+
 // ETCH A SKETCH CODE
 // GRID DRAWING AND SIZING
 const gridBtn = document.querySelector('#grid-size');
+const gridContainer = document.querySelector('.grid'); // Defining grid container
 
 function removeOldGrid(gridContainer) {
     while (gridContainer.firstChild) {
         gridContainer.removeChild(gridContainer.firstChild);
     }
-}
+};
 
 
 gridCell = function createGridCell(gridContainer) {
     const cell = document.createElement('div');
     cell.classList.add('grid-cell');
+    cell.style.backgroundColor = 'none';
     gridContainer.append(cell);
 };
 
@@ -35,11 +38,14 @@ function gridIterator(gridSize, gridContainer) {
         gridCell(gridContainer);
         i--;
     }
-}
+};
 
 
 drawGridWithColors = function createGrid(gridSize = 16) {
-    const gridContainer = document.querySelector('.grid'); // Defining grid container
+    const navBarList = document.querySelectorAll('li');
+    navBarList.forEach(e => e.addEventListener('click', toggleModes));
+
+    console.log(gridSize);
     removeOldGrid(gridContainer); // removing previous grid container, if such exist
 
 
@@ -48,10 +54,11 @@ drawGridWithColors = function createGrid(gridSize = 16) {
     gridContainer.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
     gridIterator(gridSize, gridContainer);
 
+
     // Defining a NodeList of grid cells and adding an Event Listener
     const uncoloredCellsNodeList = document.querySelectorAll('.grid-cell');
     uncoloredCellsNodeList.forEach(e =>
-     e.addEventListener('mouseover', getCellIndex.bind(e, uncoloredCellsNodeList)));
+     e.addEventListener('mouseover', getCellIndex));
 };
 
 getSizeAndCreateGrid = function userGridSize() {
@@ -63,38 +70,73 @@ getSizeAndCreateGrid = function userGridSize() {
     } else if (isNaN(gridSize)) {
         gridSize = 16;
     }
-    console.log(gridSize);
     drawGridWithColors(gridSize);
 }
 
 gridBtn.addEventListener('click', getSizeAndCreateGrid);
 
-drawGridWithColors();
 
 
 // COLORING THE GRID
 
-function random() { 
+randomNumber = function random() { 
     maxNum = Math.ceil(254);
     minNum = Math.floor(1);
-    return Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
+    // console.log(Math.floor((Math.random() * (maxNum - minNum + 1) + minNum)/FACTOR));
+    return Math.floor((Math.random() * (maxNum - minNum + 1) + minNum)/1);
 }
-
-function getCellIndex(uncoloredCellsNodeList) {
-    // Creating an array from Nodelist and receiving its items' indexes
+function getCellIndex() {
+    const uncoloredCellsNodeList = document.querySelectorAll('.grid-cell');
+    // Creating an array from NodeList and receiving its items' indexes
     const cellsArray = Array.from(uncoloredCellsNodeList);
+    console.log(typeof this);
     coloredCellIndex = cellsArray.indexOf(this);
     // PASS Items' indexes and the Node List to addColorCell()
     addColorCell(coloredCellIndex, uncoloredCellsNodeList);
 }
 
 function addColorCell(coloredCellIndex, uncoloredCellsNodeList) {
-    randomRGB1 = random();
-    randomRGB2 = random();
-    randomRGB3 = random();
-    uncoloredCellsNodeList[coloredCellIndex].style.backgroundColor = `rgb(${randomRGB1}, ${randomRGB2}, ${randomRGB3})`;
+    randomRGB1 = randomNumber();
+    randomRGB2 = randomNumber();
+    randomRGB3 = randomNumber();
+    uncoloredCellsNodeList[coloredCellIndex].style.backgroundColor = `rgb(${randomRGB1}, ${randomRGB1}, ${randomRGB1})`;
+    console.log(randomRGB1);
 }
 
+toggleModes(gridContainer);
 
+function toggleModes(gridContainer) {
+    const body = document.querySelector('body');
+    const navbar = document.querySelector('.navbar');
+    const noir = document.querySelector('#noir');
+    noir.addEventListener('click', changeToNoir);
+
+    // changeToNoir(body, navbar, gridContainer);
+    console.log(body);
+    let FACTOR = 1;
+    switch (body.className) {
+        case 'noir-style':
+            FACTOR = 3;
+            drawGridWithColors(gridSize = 16, FACTOR);
+            console.log(FACTOR);
+            break;
+
+        
+        default:
+            FACTOR = 1;
+            drawGridWithColors(gridSize = 16, FACTOR);
+            console.log(FACTOR);
+            break;
+    }
+    console.log(FACTOR);
+}
+
+function changeToNoir(body, navbar, gridContainer) {
+    body.classList.add('noir-style');
+    navbar.classList.add('noir-style');
+    gridContainer.classList.add('noir-style');
+    return body, navbar, gridContainer;
+
+}
 
 

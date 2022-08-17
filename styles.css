@@ -34,6 +34,10 @@ body, html {
     font-size: 1.5rem;
 }
 
+li:hover {
+    cursor: pointer;
+}
+
 
 
 .navbar .toggle-btn {
@@ -52,6 +56,7 @@ body, html {
 }
 
 .toggle-btn:hover {
+    cursor: pointer;
     padding:0 5px;
 }
 
@@ -73,6 +78,7 @@ body, html {
 .grid:hover {
     box-shadow: 0px 0px 20px lime;
     background: rgb(98, 98, 195);
+    cursor: cell;
 }
 
 
@@ -84,4 +90,24 @@ body, html {
 
 .grid-cell:hover {
     border-color:  rgb(7, 2, 100);
+}
+
+.noir-style {
+    background: rgb(26, 29, 29);
+}
+
+.navbar.noir-style {
+    background: rgb(3, 17, 17);
+}
+
+.grid.noir-style {
+    background: rgba(0, 0, 0, 0.655);
+    box-shadow: 
+    0px 0px 10px rgb(18, 10, 79);
+}
+
+.grid.noir-style:hover {
+    box-shadow: 0px 0px 20px lime;
+    background: rgb(0, 0, 0);
+    cursor: cell;
 }
