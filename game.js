@@ -1,12 +1,17 @@
 // NAVBAR CODE
 
+const toggleBtn = document.querySelector('.toggle-btn');
+toggleBtn.addEventListener('click', showNavBar);
+
 function showNavBar() {
     const navbar = document.querySelector('.navbar');
     navbar.classList.toggle('active');
 };
 
-const toggleBtn = document.querySelector('.toggle-btn');
-toggleBtn.addEventListener('click', showNavBar);
+function highlightItem(e) {
+    console.log(e.target);
+    e.target.classList.toggle('active');
+}
 
 
 
@@ -23,6 +28,11 @@ function removeOldGrid(gridContainer) {
     }
 };
 
+function clearSketch() {
+    const gridCell = document.querySelectorAll('.grid-cell');
+    gridCell.forEach(cell => cell.style.backgroundColor = 'transparent');  
+}
+
 
 gridCell = function createGridCell(gridContainer) {
     const cell = document.createElement('div');
@@ -38,31 +48,6 @@ function gridIterator(gridSize, gridContainer) {
         i--;
     }
 };
-
-function toggleModes(e) {
-    const body = document.querySelector('body');
-    const navbar = document.querySelector('.navbar');
-    const gridContainer = document.querySelector('.grid');
-
-    const currentMode = e.currentTarget;
-    let mode = 'multi';
-    switch (currentMode.id) {
-        case 'noir':
-            changeToNoir(body, navbar, gridContainer);
-            mode = 'noir';
-            drawGridWithColors(mode);
-            console.log(currentMode);
-            break;
-        default:
-            changeToMulti(body, navbar, gridContainer);
-            drawGridWithColors(mode);
-            console.log(currentMode);
-            break;
-        case 'grid-size':
-            getSizeAndCreateGrid();
-            break;    
-    }
-}
 
 
 drawGridWithColors = function createGrid(mode = 'multi', gridSize = 16) {
@@ -84,16 +69,53 @@ drawGridWithColors = function createGrid(mode = 'multi', gridSize = 16) {
             // const uncoloredCellsNodeList = document.querySelectorAll('.grid-cell');
             uncoloredCellsNodeList.forEach(e => e.addEventListener('mouseover', addColorCell));
             break;
-        default:
-
     }
     
 
-    const navBarList = document.querySelectorAll('li');
-    navBarList.forEach(e => e.addEventListener('click', toggleModes));    
+    const navBarList = document.querySelector('ul');
+    navBarList.addEventListener('click', toggleModes);    
 };
 
-getSizeAndCreateGrid = function userGridSize() {
+function toggleModes(e) {
+    const body = document.querySelector('body');
+    const navbar = document.querySelector('.navbar');
+    const gridContainer = document.querySelector('.grid');
+
+    let currentMode = e.target;
+    let mode = 'multi';
+    switch (currentMode.id) {
+        case 'noir':
+            highlightItem(e);
+            changeToNoir(body, navbar, gridContainer);
+            mode = 'noir';
+            drawGridWithColors(mode);
+            break;
+        default:
+            highlightItem(e);
+            changeToMulti(body, navbar, gridContainer);
+            drawGridWithColors(mode);
+            break;
+        case 'grid-size':
+            if (body.className === 'noir-style') {
+                mode = 'noir';
+                getSizeAndCreateGrid(mode);
+            } else {
+                mode = 'multi';
+                getSizeAndCreateGrid(mode);
+            }
+            break;
+        case 'clear':
+            console.log('hi');
+            clearSketch();
+            break;
+        case 'eraser':
+            eraser();
+            break;
+    }
+}
+
+
+getSizeAndCreateGrid = function userGridSize(mode) {
     // User inputs a value of a grid size, which PASSES to drawGridWithColors()
     let gridSize;
     gridSize = parseInt(prompt("Write down the size of the grid. Warning: 100 is maximum!"));
@@ -103,15 +125,11 @@ getSizeAndCreateGrid = function userGridSize() {
         gridSize = 16;
     }
     // return gridSize;
-    drawGridWithColors(gridSize);
+    drawGridWithColors(mode, gridSize);
 }
 
-// const gridBtn = document.querySelector('#grid-size');
-// gridBtn.addEventListener('click', getSizeAndCreateGrid);
 
-
-
-// COLORING THE GRID
+// COLORING AND ERASING THE GRID
 
 randomNumber = function random() { 
     maxNum = Math.ceil(254);
@@ -134,6 +152,14 @@ function addGrayCell(e) {
     currentCell.style.backgroundColor = `rgb(${randomRGB}, ${randomRGB}, ${randomRGB})`;  
 }
 
+function eraser() {
+    const gridCell = document.querySelectorAll('.grid-cell');
+    gridCell.forEach(cell => cell.addEventListener('mouseover', eraseCell)); 
+}
+
+function eraseCell() {
+    this.style.backgroundColor = 'transparent';
+}
 
 
 
@@ -142,6 +168,7 @@ function changeToNoir(body, navbar, gridContainer) {
     body.classList.add('noir-style');
     navbar.classList.add('noir-style');
     gridContainer.classList.add('noir-style');
+    return body;
 }
 
 function changeToMulti(body, navbar, gridContainer) {
@@ -149,10 +176,7 @@ function changeToMulti(body, navbar, gridContainer) {
     navbar.classList.remove('noir-style');
     gridContainer.classList.remove('noir-style');
     console.log('Multi');
-}
-
-function changeToPsycho() {
-    console.log('Psycho');
+    return body;
 }
 
 
