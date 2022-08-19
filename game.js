@@ -8,9 +8,22 @@ function showNavBar() {
     navbar.classList.toggle('active');
 };
 
+
+const listItems = document.querySelectorAll('li');
+let arrayItems = Array.from(listItems);
+listItems.forEach(e => e.addEventListener('click', highlightItem));
+
 function highlightItem(e) {
-    console.log(e.target);
-    e.target.classList.toggle('active');
+    let theItem = e.target;
+    arrayItems.filter(item => {
+        if (item.id !== theItem.id || item.id === 'clear' || item.id === 'grid-size') {
+            item.classList.remove('active');
+            return false;
+        }
+        // const highlightedItem = document.getElementById(theItem.id);
+        theItem.classList.add('active');
+        return true;
+    });
 }
 
 // GLOBAL CONSTANTS
@@ -70,29 +83,23 @@ function toggleModes(e) {
     uncoloredCellsNodeList.forEach(colorCell => colorCell.removeEventListener('mouseover', addColorCell));
 
     const gridCell = document.querySelectorAll('.grid-cell');
+    gridCell.forEach(cell => cell.removeEventListener('mouseover', eraseCell)); 
 
     const body = document.querySelector('body');
     const navbar = document.querySelector('.navbar');
     const gridContainer = document.querySelector('.grid');
-    console.log(body);
     let currentMode = e.target;
     let mode = 'multi';
     switch (currentMode.id) {
         case 'noir':
-            highlightItem(e);
-            console.log('noir');
             changeToNoir(body, navbar, gridContainer, uncoloredCellsNodeList);
             mode = 'noir';
-            // drawGridWithColors(mode);
             break;
         default:
-            highlightItem(e);
             console.log('color');
             changeToMulti(body, navbar, gridContainer, uncoloredCellsNodeList);
-            // drawGridWithColors(mode);
             break;
         case 'grid-size':
-            highlightItem(e);
             if (body.className === 'noir-style') {
                 mode = 'noir';
                 getSizeAndCreateGrid(mode);
@@ -102,12 +109,9 @@ function toggleModes(e) {
             }
             break;
         case 'clear':
-            highlightItem(e);
-            console.log('hi');
             clearSketch();
             break;
         case 'eraser':
-            highlightItem(e);
             eraser(gridCell);
             break;
     }
@@ -133,7 +137,6 @@ getSizeAndCreateGrid = function userGridSize(mode) {
 randomNumber = function random() { 
     maxNum = Math.ceil(255);
     minNum = Math.floor(1);
-    // console.log(Math.floor((Math.random() * (maxNum - minNum + 1) + minNum)/FACTOR));
     return Math.floor((Math.random() * (maxNum) + minNum));
 }
 
@@ -150,8 +153,7 @@ function addColorCell(colorCell) {
     const randomRGB1 = randomNumber();
     const randomRGB2 = randomNumber();
     const randomRGB3 = randomNumber();
-    currentCell.style.backgroundColor = `rgb(${randomRGB1}, ${randomRGB2}, ${randomRGB3})`;
-    console.log('multi', randomRGB1, randomRGB2, randomRGB3);  
+    currentCell.style.backgroundColor = `rgb(${randomRGB1}, ${randomRGB2}, ${randomRGB3})`;  
 }
 
 
@@ -166,9 +168,7 @@ function addGrayCell(grayCell) {
     let currentCell = grayCell.currentTarget;
     const randomRGB = randomNumber();
     currentCell.style.backgroundColor = `rgb(${randomRGB}, ${randomRGB}, ${randomRGB})`;  
-    console.log('noir', randomRGB, randomRGB, randomRGB);  
 }
-
 
 function eraser(gridCell) {
     gridCell.forEach(cell => cell.addEventListener('mouseover', eraseCell)); 
@@ -176,7 +176,6 @@ function eraser(gridCell) {
 
 function eraseCell() {
     this.style.backgroundColor = 'transparent';
-    console.log('hi');
 }
 
 drawGridWithColors(DEF_MODE, DEF_GRID_SIZE);
